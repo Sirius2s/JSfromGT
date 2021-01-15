@@ -1,15 +1,15 @@
 # File: .github/workflows/repo-sync.yml
-name: sync-lxk0301-scripts
+name: sync-scripts
 on:
-#   schedule:
-#     - cron: '1 0,15 * * *'
+  schedule:
+    - cron: '1 0,15 * * *'
   workflow_dispatch:
 #   watch:
 #     types: started
 #   push:
 #     branches: [ master ]
   repository_dispatch:
-    types: sync-JD-scripts
+    types: sync-scripts
 jobs:
   repo-sync:
     env:
@@ -25,9 +25,9 @@ jobs:
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
-          source_repo: "https://github.com/Sirius2s/JSfromGT.git"
-          source_branch: "backup" #"master" #从主分支备份
-          destination_branch: "backup"
+          source_repo: "https://gitee.com/lxk0301/jd_scripts/"
+          source_branch: "master" #"master" #从主分支备份
+          destination_branch: "remGT"
           github_token: ${{ secrets.PAT }}
       # 我自己同步到gitee使用，其他人可忽略
 #       - name: sync github -> gitee
