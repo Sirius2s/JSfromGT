@@ -39,3 +39,11 @@ jobs:
 #           static_list: "scripts"
 #           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
 #           dst_token: ${{ secrets.GITEE_TOKEN }}
+      - name: sync shylocks
+        uses: repo-sync/github-sync@v2
+        if: env.PAT
+        with:
+          source_repo: "https://github.com/shylocks/loon"
+          source_branch: "main" #"master" #从主分支备份
+          destination_branch: "remSL"
+          github_token: ${{ secrets.PAT }}
