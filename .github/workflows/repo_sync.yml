@@ -25,7 +25,8 @@ jobs:
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
-          source_repo: "https://github.com/LXK9301/jd_scripts"
+#           source_repo: "https://github.com/LXK9301/jd_scripts"
+          source_repo: "https://gitee.com/lxk0301/jd_scripts"
           source_branch: "master" #"master" #从主分支备份
           destination_branch: "remGT"
           github_token: ${{ secrets.PAT }}
@@ -43,7 +44,8 @@ jobs:
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
-          source_repo: "https://github.com/shylocks/loon"
+#           source_repo: "https://github.com/shylocks/loon"
+          source_repo: "https://gitee.com/shylocks/updateTeam"
           source_branch: "main" #"master" #从主分支备份
           destination_branch: "remSL"
           github_token: ${{ secrets.PAT }}
