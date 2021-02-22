@@ -1,8 +1,8 @@
 # File: .github/workflows/sync_cdn.yml
 name: sync_cdn
 on:
-  schedule:
-    - cron: '1 */4 * * *'
+#   schedule:
+#     - cron: '1 */4 * * *'
   workflow_dispatch:
 #   watch:
 #     types: started
@@ -25,28 +25,39 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: git clone
-        run: |
-          mkdir -p /.ssh
-          echo -e $KEY > /.ssh/id_rsa
-          chmod 600 /.ssh/id_rsa
-          ssh-keyscan gitee.com > /.ssh/known_hosts
-          git clone -b $REPO_BRANCH $REPO_URL
+#       - name: git clone
+#         run: |
+# #          mkdir -p /.ssh
+#           echo -e $KEY > id_rsa
+#           chmod 600 id_rsa
+#           ssh-keyscan gitee.com > known_hosts
+#           git clone -b $REPO_BRANCH $REPO_URL
 #       - name: get cdn scripts
 #         run: |
-#           wget -c -r -np -N https://jdsharedresourcescdn.azureedge.net/jdresource/          
-      - name: commit
-        run: |
-          git config --global user.email ${{ secrets.EMAIL }}
-          git config --global user.name fickgit
-          git add .
-          git commit -m "update by Github Action" -a || echo "Nothing to update"
+#           wget -c -r -np -N https://jdsharedresourcescdn.azureedge.net/jdresource/    
+
+#       - name: commit
+#         run: |
+#           git config --global user.email ${{ secrets.EMAIL }}
+#           git config --global user.name fickgit
+#           git add .
+#           git commit -m "update by Github Action" -a || echo "Nothing to update"
       
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+#       - name: Push changes
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.PAT }}
+#           branch: remCDN          
+
+      - name: sync JD-scripts
+        uses: repo-sync/github-sync@v2
+        if: env.PAT
         with:
+#           source_repo: "https://github.com/LXK9301/jd_scripts"
+          source_repo: "https://gitee.com/lxk0301/jd_scripts"
+          source_branch: "master" #"master" #从主分支备份
+          destination_branch: "remCDN"
           github_token: ${{ secrets.PAT }}
-          branch: remCDN          
           
       - name: sync shylocks
         uses: repo-sync/github-sync@v2
