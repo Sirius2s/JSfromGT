@@ -23,7 +23,7 @@ jobs:
 
       - name: get cdn scripts
         run: |
-          wget -m https://jdsharedresourcescdn.azureedge.net/jdresource/
+          wget -c -r -np -N https://jdsharedresourcescdn.azureedge.net/jdresource/
       - name: commit
         run: |
           git config --global user.email ${{ secrets.EMAIL }}
