@@ -54,8 +54,8 @@ jobs:
         if: env.PAT
         with:
 #           source_repo: "https://github.com/LXK9301/jd_scripts"
-          source_repo: "https://gitee.com/lxk0301/jd_scripts"
-          source_branch: "master" #"master" #从主分支备份
+          source_repo: $REPO_URL
+          source_branch: $REPO_BRANCH #"master" #从主分支备份
           destination_branch: "remCDN"
           github_token: ${{ secrets.PAT }}
           
