@@ -1,0 +1,48 @@
+# File: .github/workflows/sync_cdn.yml
+name: sync_cdn
+on:
+  schedule:
+    - cron: '1 */4 * * *'
+  workflow_dispatch:
+#   watch:
+#     types: started
+#   push:
+#     branches: [ master ]
+  repository_dispatch:
+    types: sync_cdn
+jobs:
+  repo-sync:
+    env:
+      PAT: ${{ secrets.PAT }} #此处PAT需要申请，教程详见：https://www.jianshu.com/p/bb82b3ad1d11
+#      dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: get cdn scripts
+        run: |
+          wget -m https://jdsharedresourcescdn.azureedge.net/jdresource/
+      - name: commit
+        run: |
+          git config --global user.email ${{ secrets.EMAIL }}
+          git config --global user.name fickgit
+          git add .
+          git commit -m "update by Github Action" -a || echo "Nothing to update"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: remCDN          
+          
+      - name: sync shylocks
+        uses: repo-sync/github-sync@v2
+        if: env.PAT
+        with:
+#           source_repo: "https://github.com/shylocks/loon"
+          source_repo: "https://gitee.com/shylocks/updateTeam"
+          source_branch: "main" #"master" #从主分支备份
+          destination_branch: "remSL"
+          github_token: ${{ secrets.PAT }}
