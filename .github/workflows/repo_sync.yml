@@ -14,7 +14,9 @@ jobs:
   repo-sync:
     env:
       PAT: ${{ secrets.PAT }} #此处PAT需要申请，教程详见：https://www.jianshu.com/p/bb82b3ad1d11
-      dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      REPO_URL: git@gitee.com:lxk0301/jd_scripts.git
+      REPO_BRANCH: master
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,8 +28,8 @@ jobs:
         if: env.PAT
         with:
 #           source_repo: "https://github.com/LXK9301/jd_scripts"
-          source_repo: "https://gitee.com/lxk0301/jd_scripts"
-          source_branch: "master" #"master" #从主分支备份
+          source_repo: $REPO_URL
+          source_branch: $REPO_BRANCH
           destination_branch: "remGT"
           github_token: ${{ secrets.PAT }}
 #       # 同步到gitee
