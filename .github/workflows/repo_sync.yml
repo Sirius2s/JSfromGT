@@ -42,12 +42,20 @@ jobs:
 #           static_list: "jd_scripts"
 #           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
 #           dst_token: ${{ secrets.GITEE_TOKEN }}
-      - name: sync shylocks
+      - name: sync monk-coder
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
-#           source_repo: "https://github.com/shylocks/loon"
-          source_repo: "https://gitee.com/shylocks/updateTeam"
-          source_branch: "main" #"master" #从主分支备份
-          destination_branch: "remSL"
+          source_repo: "https://github.com/monk-coder/dust"
+          source_branch: "dust" #"master" #从主分支备份
+          destination_branch: "remMC"
           github_token: ${{ secrets.PAT }}
+#       - name: sync shylocks
+#         uses: repo-sync/github-sync@v2
+#         if: env.PAT
+#         with:
+# #           source_repo: "https://github.com/shylocks/loon"
+#           source_repo: "https://gitee.com/shylocks/updateTeam"
+#           source_branch: "main" #"master" #从主分支备份
+#           destination_branch: "remSL"
+#           github_token: ${{ secrets.PAT }}
