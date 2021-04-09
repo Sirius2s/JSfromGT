@@ -56,7 +56,8 @@ if ($.isNode()) {
       await getShareCode()
     }
   }
-
+  console.log(allMessage);
+  console.log($.message);
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean` })
   }  
