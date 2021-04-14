@@ -24,6 +24,7 @@ jobs:
           persist-credentials: false
 
       - name: sync JD-scripts
+        timeout-minutes: 10
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
