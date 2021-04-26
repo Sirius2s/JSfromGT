@@ -74,10 +74,12 @@ function showMsg() {
   })
 }
 async function main() {
+  console.log(`main`)
   await getInfo('https://pro.m.jd.com/mall/active/3ryu78eKuLyY5YipWWVSeRQEpLQP/index.html')
   await getInfo('https://pro.m.jd.com/mall/active/3ryu78eKuLyY5YipWWVSeRQEpLQP/index.html')
 }
 async function getInfo(url) {
+  console.log(`getInfo`)
   return new Promise(resolve=>{
     $.get({
       url,
@@ -120,6 +122,7 @@ async function getInfo(url) {
   })
 }
 function doTask(enAwardK) {
+  console.log(`doTask`)
   return new Promise(resolve => {
     $.post(taskUrl('babelDoScoreTask',{enAwardK,"isQueryResult":0,"siteClient":"apple","mitemAddrId":"","geo":{"lng":"","lat":""},"addressId":"","posLng":"","posLat":"","homeLng":"","homeLat":"","focus":"","innerAnchor":"","cv":"2.0"}),
       (err,resp,data)=>{
@@ -139,6 +142,7 @@ function doTask(enAwardK) {
   })
 }
 function doLottery(enAwardK,authType="2") {
+  console.log(`doLottery`)
   return new Promise(resolve => {
     $.post(taskUrl('babelGetLottery',{enAwardK,authType}),
       (err,resp,data)=>{
@@ -159,6 +163,7 @@ function doLottery(enAwardK,authType="2") {
   })
 }
 function taskUrl(function_id, body = {}) {
+  console.log(`taskUrl`)
   return {
     url: `${JD_API_HOST}/client.action?functionId=${function_id}`,
     body: `body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
@@ -173,6 +178,7 @@ function taskUrl(function_id, body = {}) {
 }
 
 function safeGet(data) {
+  console.log(`safeGet`)
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
