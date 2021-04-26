@@ -90,7 +90,7 @@ async function getInfo(url) {
     },async (err,resp,data)=>{
       try{
         if(err){
-
+          console.log(err)
         }else{
           data = $.toObj(data.match(/window.__react_data__ = (\{.*\})/)[1])
           let taskList = data?.activityData?.floorList?.filter(vo=>vo.template==='score_task')[0]
