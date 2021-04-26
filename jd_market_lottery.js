@@ -74,7 +74,6 @@ function showMsg() {
   })
 }
 async function main() {
-  console.log(`main`)
   await getInfo('https://pro.m.jd.com/mall/active/3ryu78eKuLyY5YipWWVSeRQEpLQP/index.html')
   await getInfo('https://pro.m.jd.com/mall/active/3ryu78eKuLyY5YipWWVSeRQEpLQP/index.html')
 }
@@ -90,8 +89,9 @@ async function getInfo(url) {
     },async (err,resp,data)=>{
       try{
         if(err){
-          console.log(err)
+          console.log(err,`err`)
         }else{
+          console.log(resp,data)
           data = $.toObj(data.match(/window.__react_data__ = (\{.*\})/)[1])
           let taskList = data?.activityData?.floorList?.filter(vo=>vo.template==='score_task')[0]
           //console.log(data?.activityData?.floorList)
@@ -113,8 +113,9 @@ async function getInfo(url) {
           }
         }
       }catch (e) {
-
+        console.log(e)
       }finally {
+        console.log(`finally`)
         resolve()
       }
 
