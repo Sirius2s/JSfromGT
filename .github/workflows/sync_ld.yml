@@ -1,5 +1,5 @@
 # File: .github/workflows/repo-sync.yml
-name: sync-scripts
+name: sync-ld
 on:
   schedule:
     - cron: '6 */4 * * *'
@@ -9,7 +9,7 @@ on:
 #   push:
 #     branches: [ master ]
   repository_dispatch:
-    types: sync-scripts
+    types: sync-ld
 jobs:
   repo-sync:
     env:
