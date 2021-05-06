@@ -1,0 +1,35 @@
+# File: .github/workflows/repo-sync.yml
+name: sync-MC
+on:
+  schedule:
+    - cron: '6 */4 * * *'
+  workflow_dispatch:
+#   watch:
+#     types: started
+#   push:
+#     branches: [ master ]
+  repository_dispatch:
+    types: sync-MC
+jobs:
+  repo-sync:
+    env:
+      PAT: ${{ secrets.PAT }} #此处PAT需要申请，教程详见：https://www.jianshu.com/p/bb82b3ad1d11
+#       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      REPO_URL: https://github.com/monk-coder/dust
+      REPO_BRANCH: dust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: sync mc
+        timeout-minutes: 10
+        uses: repo-sync/github-sync@v2
+        if: env.PAT
+        with:
+#           source_repo: "https://github.com/LXK9301/jd_scripts"
+          source_repo: $REPO_URL
+          source_branch: $REPO_BRANCH
+          destination_branch: "remMC"
+          github_token: ${{ secrets.PAT }}
