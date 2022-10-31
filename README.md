@@ -1,3 +1,9 @@
+## 其他脚本
+
+[签到领京豆](https://github.com/ClassmateLin/jd-take-bean.git)
+[东东农场](https://github.com/ClassmateLin/jd-farm.git)
+[丘大叔签到](https://github.com/ClassmateLin/uncle-qiu-sign-in.git)
+
 ## 特别声明: 
 
 * 本仓库发布的jd_scripts项目中涉及的任何解锁和解密分析脚本，仅用于测试和学习研究，禁止用于商业用途，不能保证其合法性，准确性，完整性和有效性，请根据情况自行判断.
