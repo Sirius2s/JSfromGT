@@ -35,6 +35,7 @@ let trialActivityTitleList = []
 let trialActivityPriceList = []
 let notifyMsg = ''
 let AddMsg = ''
+let Msg_ActList = '手动执行列表：\n'
 let size = 1;
 $.isPush = true;
 $.isLimit = false;
@@ -105,7 +106,7 @@ let args_xh = {
      * 可设置环境变量：JD_TRY_TABID，用@进行分隔
      * tabId不定期会变,获取不到商品，自行获取并修改tabId
      * */
-    tabId: process.env.JD_TRY_TABID && process.env.JD_TRY_TABID.split('@').map(Number) || [208, 209, 3, 5, 4, 204, 207, 7, 13, 206, 14, 205, 6, 8, 201, 203, 15, 10, 211, 16, 212, 210, 12, 202, 9, 11],
+    tabId: process.env.JD_TRY_TABID && process.env.JD_TRY_TABID.split('@').map(Number) || [208, 209, 3, 5, 4, 204, 207, 7, 13, 206, 14, 205, 6, 8, 201, 203, 15, 10, 211, 16, 212, 210, 12, 202, 9, 11, 221, 222, 223, 224, 225, 226, 227, 228, 229, 234, 235],
     /*
      * 试用商品标题过滤，黑名单，当标题存在关键词时，则不加入试用组
      * 当白名单和黑名单共存时，黑名单会自动失效，优先匹配白名单，匹配完白名单后不会再匹配黑名单，望周知
@@ -251,6 +252,9 @@ let args_xh = {
                     console.log(`间隔等待中，请等待3秒 \n`)
                     await $.wait(3000);
                 }
+            }
+            for (let i = 0; i < trialActivityIdList.length; i++) {
+                Msg_ActList += `${i}:\thttps://try.m.jd.com/${trialActivityIdList[i]}.html\n`
             }
             if ($.isForbidden === false && $.isLimit === false) {
                 console.log(`稍后将执行试用申请，请等待 2 秒\n`)
@@ -507,7 +511,7 @@ function try_feedsList(tabId, page) {
                         }
                         $.retrynum = 0
                     } else {
-                        console.log(`💩 获得试用列表失败: ${data.message}`)
+                        console.log(`💩 获得试用列表失败: tabId:${args_xh.tabId[$.nowTabIdIndex]},${data.message}`)
                     }
                 }
             } catch (e) {
@@ -682,6 +686,9 @@ async function showMsg() {
         message += `🎉 ${$.completeNum}个商品已完成\n`;
         message += `🗑 ${$.giveupNum}个商品已放弃\n\n`;
         message += AddMsg;
+    }
+    if ($.totalSuccess < 50){
+        message += Msg_ActList;
     }
     if (!args_xh.jdNotify || args_xh.jdNotify === 'false') {
         $.msg($.name, ``, message, {
