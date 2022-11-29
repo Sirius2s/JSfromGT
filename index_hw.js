@@ -88,7 +88,7 @@ exports.main_handler = async (event, context, callback) => {
             console.error('未接收到任何参数,请阅读@hshx123大佬教程的测试步骤,查看如何使用.')
             return
         }
-        if (event["user_event"] = 'z_ft') {
+        if (event["user_event"] == 'z_ft') {
             params = {
                 "z_ft":
                 {
