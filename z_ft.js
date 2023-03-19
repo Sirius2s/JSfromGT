@@ -396,7 +396,7 @@ function try_feedsList(tabId, page) {
             "client": "app",
             //"previewTime": ""
         });
-        let option = taskurl_xh('newtry', 'try_feedsList', body)
+        let option = taskurl_xh('newtry', 'try_SpecFeedList', body)
         $.post(option, (err, resp, data) => {
             try {
                 if (err) {
