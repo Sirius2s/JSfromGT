@@ -404,7 +404,7 @@ function try_feedsList(tabId, page) {
                         console.log(`请求失败，第 ${$.retrynum + 1} 次重试`)
                         $.retrynum++
                         // if ($.retrynum === 3) { $.isForbidden = true; $.log('多次尝试失败，换个时间再试！') }
-                        if ($.retrynum === 5) { console.log(`多次尝试失败，跳过tabId:${tabId}的第${page}页！`); $.retrynum = 0; $.nowPage === args_xh.totalPages ? $.nowPage = 1 : $.nowPage++; }
+                        if ($.retrynum === 1) { console.log(`多次尝试失败，跳过tabId:${tabId}的第${page}页！`); $.retrynum = 0; $.nowPage === args_xh.totalPages ? $.nowPage = 1 : $.nowPage++; }
                     } else {
                         console.log(JSON.stringify(err))
                         console.log(`${$.name} API请求失败，请检查网路重试`)
