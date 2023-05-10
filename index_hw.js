@@ -92,7 +92,7 @@ exports.main_handler = async (event, context, callback) => {
             params = {
                 "z_ft":
                 {
-                    "timeout": 55
+                    "timeout": 45
                 }
             }
             console.log("params:", params)
