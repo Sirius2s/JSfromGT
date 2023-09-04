@@ -33,9 +33,12 @@ const URL = 'https://api.m.jd.com/client.action'
 let trialActivityIdList = []
 let trialActivityTitleList = []
 let trialActivityPriceList = []
+let trialImgList = []
 let notifyMsg = ''
+let notifyMsg_Img = ''
 let AddMsg = ''
 let Msg_ActList = '手动执行列表：\n'
+let Msg_ActList_Img = '手动图模式：\n'
 let size = 1;
 $.isPush = true;
 $.isLimit = false;
@@ -231,6 +234,7 @@ let args_xh = {
                     trialActivityIdList = []
                     trialActivityTitleList = []
                     trialActivityPriceList = []
+                    trialImgList = []
                 }
                 $.isLimit = false;
                 // 获取tabList的，不知道有哪些的把这里的注释解开跑一遍就行了
@@ -254,25 +258,32 @@ let args_xh = {
                 }
             }
             for (let i = 0; i < trialActivityIdList.length; i++) {
-                Msg_ActList += `${i}:\thttps://try.m.jd.com/${trialActivityIdList[i]}.html\n`
+                Msg_ActList += `${i}:\thttps://try.m.jd.com/${trialActivityIdList[i].split(";")[0]}.html\t【${trialActivityIdList[i].split(";")[1]}】\n`
+                if (i == 0) Msg_ActList_Img += '<table>'
+                if ((i + 1) % 5 == 1) Msg_ActList_Img += '<tr>'
+                Msg_ActList_Img += `<td>【${i}】<br/><a href="https://try.m.jd.com/${trialActivityIdList[i].split(";")[0]}.html">` +
+                                    `<img src="${trialImgList[i]}" alt="${trialActivityTitleList[i]}" width="100" height="100">` +
+                                    `</a></td>`
+                if ((i + 1) % 5 == 0) Msg_ActList_Img += '</tr>'
+                if (i == (trialActivityIdList.length - 1)) Msg_ActList_Img += '</table>'
             }
             if ($.isForbidden === false && $.isLimit === false) {
-                console.log(`稍后将执行试用申请，请等待 2 秒\n`)
-                await $.wait(2000);
-                for (let i = 0; i < trialActivityIdList.length && $.isLimit === false; i++) {
-                    if ($.isLimit) {
-                        console.log("试用上限")
-                        break
-                    }
-                    if ($.isForbidden) { console.log('403了，跳出'); break }
-                    await try_apply(trialActivityTitleList[i], trialActivityIdList[i])
-                    //console.log(`间隔等待中，请等待 ${args_xh.applyInterval} ms\n`)
-                    const waitTime = generateRandomInteger(args_xh.applyInterval, 8000);
-                    console.log(`随机等待${waitTime}ms后继续`);
-                    await $.wait(waitTime);
-                }
-                console.log("试用申请执行完毕...")
-                // await try_MyTrials(1, 1)    //申请中的商品
+                // console.log(`稍后将执行试用申请，请等待 2 秒\n`)
+                // await $.wait(2000);
+                // for (let i = 0; i < trialActivityIdList.length && $.isLimit === false; i++) {
+                //     if ($.isLimit) {
+                //         console.log("试用上限")
+                //         break
+                //     }
+                //     if ($.isForbidden) { console.log('403了，跳出'); break }
+                //     await try_apply(trialActivityTitleList[i], trialActivityIdList[i])
+                //     //console.log(`间隔等待中，请等待 ${args_xh.applyInterval} ms\n`)
+                //     const waitTime = generateRandomInteger(args_xh.applyInterval, 8000);
+                //     console.log(`随机等待${waitTime}ms后继续`);
+                //     await $.wait(waitTime);
+                // }
+                // console.log("试用申请执行完毕...")
+                // // await try_MyTrials(1, 1)    //申请中的商品
                 $.giveupNum = 0;
                 $.successNum = 0;
                 $.getNum = 0;
@@ -295,7 +306,8 @@ let args_xh = {
         if (($.cookiesArr.length - ($.sentNum * args_xh.sendNum)) < args_xh.sendNum && notifyMsg.length != 0) {
             console.log(`正在进行最后一次发送通知，发送数量：${($.cookiesArr.length - ($.sentNum * args_xh.sendNum))}`)
             await $.notify.sendNotify(`${$.name}`, `${notifyMsg}`)
-            notifyMsg = "";
+            await $.notify.sendNotify(`${$.name}`, `${notifyMsg_Img}`)
+            notifyMsg = "";notifyMsg_Img = "";
         }
     }
     } else {
@@ -404,7 +416,7 @@ function try_feedsList(tabId, page) {
                         console.log(`请求失败，第 ${$.retrynum + 1} 次重试`)
                         $.retrynum++
                         // if ($.retrynum === 3) { $.isForbidden = true; $.log('多次尝试失败，换个时间再试！') }
-                        if ($.retrynum === 2) { console.log(`多次尝试失败，跳过tabId:${tabId}的第${page}页！`); $.retrynum = 0; $.nowPage === args_xh.totalPages ? ($.nowPage = 1, $.nowItem = 1, $.nowTabIdIndex++) : $.nowPage++; }
+                        if ($.retrynum === 5) { console.log(`多次尝试失败，跳过tabId:${tabId}的第${page}页！`); $.retrynum = 0; $.nowPage === args_xh.totalPages ? ($.nowPage = 1, $.nowItem = 1, $.nowTabIdIndex++) : $.nowPage++; }
                     } else {
                         console.log(JSON.stringify(err))
                         console.log(`${$.name} API请求失败，请检查网路重试`)
@@ -433,7 +445,7 @@ function try_feedsList(tabId, page) {
                                 args_xh.printLog ? console.log(`商品状态异常，未找到skuTitle\n`) : ''
                                 continue
                             }
-                            if (trialActivityIdList.some(f => item.trialActivityId.toString().includes(f))) {
+                            if (trialActivityIdList.some(f => item.trialActivityId.toString().includes(f.split(";")[0]))) {
                                 args_xh.printLog ? console.log(`商品已在列表中：${item.skuTitle}\n`) : ''
                                 continue
                             }                            
@@ -464,9 +476,11 @@ function try_feedsList(tabId, page) {
                                         // trialActivityPriceList.push(item.jdPrice)
 
                                         let idx =  trialActivityPriceList.findIndex(it=>it<=parseFloat(item.jdPrice))
+                                        item.trialActivityId = item.trialActivityId+';'+args_xh.tabId[$.nowTabIdIndex]
                                         trialActivityIdList.splice(idx===-1?trialActivityIdList.length:idx,0,item.trialActivityId)
                                         trialActivityTitleList.splice(idx===-1?trialActivityTitleList.length:idx,0,item.skuTitle)
                                         trialActivityPriceList.splice(idx===-1?trialActivityPriceList.length:idx,0,item.jdPrice)
+                                        trialImgList.splice(idx===-1?trialImgList.length:idx,0,item.skuImg)
                                     }
                                 }// else {
                                     tempKeyword = ``;
@@ -490,9 +504,11 @@ function try_feedsList(tabId, page) {
                                             // trialActivityPriceList.push(item.jdPrice)
 
                                             let idx =  trialActivityPriceList.findIndex(it=>it<=parseFloat(item.jdPrice))
+                                            item.trialActivityId = item.trialActivityId+';'+args_xh.tabId[$.nowTabIdIndex]
                                             trialActivityIdList.splice(idx===-1?trialActivityIdList.length:idx,0,item.trialActivityId)
                                             trialActivityTitleList.splice(idx===-1?trialActivityTitleList.length:idx,0,item.skuTitle)
                                             trialActivityPriceList.splice(idx===-1?trialActivityPriceList.length:idx,0,item.jdPrice)
+                                            trialImgList.splice(idx===-1?trialImgList.length:idx,0,item.skuImg)
                                         }
                                     }
                                 // }
@@ -689,6 +705,7 @@ async function showMsg() {
         message += AddMsg;
     }
     if ($.totalSuccess < 50){
+        notifyMsg_Img = message + Msg_ActList_Img;
         message += Msg_ActList;
     }
     if (!args_xh.jdNotify || args_xh.jdNotify === 'false') {
@@ -749,7 +766,7 @@ function totalBean() {
 }
 function geth5st(body) {
     let opt = {
-        url: `https://api.nolanstore.top/h5st`,
+        url: `https://api.nolanstore.cc/h5st`,
         body: JSON.stringify({
             "appId": "a8ade",
             "functionId": "try_apply",
